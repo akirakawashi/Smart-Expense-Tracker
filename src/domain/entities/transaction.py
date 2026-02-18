@@ -1,67 +1,27 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
+from typing import Optional
 from enum import Enum
 
-
-class TransactionType(str, Enum):
-    """Transaction type — a business concept, not a raw DB string."""
-
+class TransactionType(Enum):
     INCOME = "income"
     EXPENSE = "expense"
 
-
-class TransactionCategory(str, Enum):
-    """
-    Transaction categories.
-
-    Defined in the domain — both the AI layer and Infrastructure
-    use these same values.
-    """
-
+class TransactionCategory(Enum):
     FOOD = "food"
     TRANSPORT = "transport"
     ENTERTAINMENT = "entertainment"
     UTILITIES = "utilities"
-    HEALTH = "health"
-    SALARY = "salary"
-    FREELANCE = "freelance"
     OTHER = "other"
-
 
 @dataclass
 class Transaction:
     """
-    Domain entity: Transaction.
-
-    id is int | None:
-    - None  — the entity has not been persisted yet (before INSERT)
-    - int   — assigned by the database after INSERT (auto-increment)
+    Domain Entity: Transaction.
     """
-
-    id: int | None  # None before DB insert, set by DB after
+    transaction_id: Optional[int] = None  # DB auto-increment id
     user_id: int
+    transaction_type: TransactionType
     amount: float
-    type: TransactionType
     category: TransactionCategory
-    description: str
-    created_at: datetime
-    updated_at: datetime
-
-    def is_expense(self) -> bool:
-        return self.type == TransactionType.EXPENSE
-
-    def is_income(self) -> bool:
-        return self.type == TransactionType.INCOME
-
-    def validate(self) -> None:
-        """
-        Assert domain invariants.
-
-        Rules:
-        - amount must always be > 0
-        - description must not be blank
-        """
-        if self.amount <= 0:
-            raise ValueError(f"Transaction amount must be positive, got {self.amount}")
-        if not self.description.strip():
-            raise ValueError("Transaction description cannot be empty")
+    date_created: datetime = field(default_factory=datetime.now)

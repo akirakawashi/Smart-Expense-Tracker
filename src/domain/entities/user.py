@@ -1,33 +1,28 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
-
+from typing import Optional
 
 @dataclass
 class User:
     """
-    Domain entity: User.
-
-    id is int | None:
-    - None  — the entity has not been persisted yet (before INSERT)
-    - int   — assigned by the database after INSERT (auto-increment)
-
-    The application never generates the ID itself.
+    Domain Entity: User.
     """
-
-    id: int | None  # None before DB insert, set by DB after
+    user_id: Optional[int] = None  # DB auto-increment id
     email: str
     username: str
     hashed_password: str
-    is_active: bool
-    telegram_chat_id: int | None
-    created_at: datetime
-    updated_at: datetime
+    number: Optional[str] = None
+    balance: float = 0.0
+    date_created: datetime = field(default_factory=datetime.now)
 
-    def is_telegram_linked(self) -> bool:
-        """Return True if a Telegram account is linked to this user."""
-        return self.telegram_chat_id is not None
+    def deposit(self, amount: float) -> None:
+        """Deposit amount to the user's balance."""
+        if amount <= 0:
+            raise ValueError("Amount must be positive")
+        self.balance += amount
 
-    def deactivate(self) -> None:
-        """Deactivate the user account."""
-        self.is_active = False
-        self.updated_at = datetime.utcnow()
+    def withdraw(self, amount: float) -> None:
+        """Withdraw amount from the user's balance."""
+        if amount > self.balance:
+            raise ValueError("Not enough balance for withdrawal")
+        self.balance -= amount
