@@ -1,0 +1,15 @@
+[project]
+name = "Smart-Expense-Tracker"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "akirakawashi", email = "mr.oldman.23@gmail.com"},
+]
+dependencies = ["pydantic>=2.12.5", "pydantic-settings>=2.13.0", "sqlalchemy>=2.0.46", "loguru>=0.7.3", "sqlmodel>=0.0.34"]
+requires-python = "==3.13.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+
+[tool.pdm]
+distribution = false
