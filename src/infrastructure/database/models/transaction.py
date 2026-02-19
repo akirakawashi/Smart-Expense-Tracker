@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import TYPE_CHECKING, Optional
-from sqlmodel import Field, Relationship, SQLModel
-from sqlalchemy import Column, DateTime, ForeignKey, Enum as SQLEnum
+from sqlmodel import Field, Relationship
+from sqlalchemy import Column, DateTime, Enum as SQLEnum
 from infrastructure.database.base import Base
 from src.domain.entities.transaction import TransactionType, TransactionCategory
 
