@@ -19,7 +19,7 @@ class Transaction:
     """
     Domain Entity: Transaction.
     """
-    transaction_id: Optional[int] = None  # DB auto-increment id
+    transaction_id: Optional[int] = None
     user_id: int
     transaction_type: TransactionType
     amount: float
