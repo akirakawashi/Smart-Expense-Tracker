@@ -106,3 +106,16 @@ class UserRepository(IUserRepository):
 
         return self._to_entity(updated_model)
 
+    async def delete(
+        self, 
+        user_id: int
+        ) -> None:
+        """Delete user by ID."""
+        
+        query = select(UserModel).where(UserModel.user_id == user_id)
+        
+        result = await self.session.execute(query)
+        model = result.scalar_one_or_none()
+        
+        if model:
+            await self.session.delete(model)
