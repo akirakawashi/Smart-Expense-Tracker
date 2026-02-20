@@ -59,3 +59,50 @@ class UserRepository(IUserRepository):
         model = result.scalar_one_or_none()
 
         return self._to_entity(model) if model else None
+    
+    async def get_by_email(
+            self, 
+            email: str
+            ) -> Optional[User]:
+        """Get user by email address."""
+
+        query = select(UserModel).where(UserModel.email == email)
+        
+        result = await self.session.execute(query)
+        model = result.scalar_one_or_none
+
+        return self._to_entity(model) if model else None
+
+    async def create(
+            self, 
+            user: User
+            ) -> User:
+        """
+        Create a new user in database.
+        Returns the created user with generated ID.
+        """
+
+        model = self._to_model(user)
+        
+        self.session.add(model)
+        await self.session.flush() 
+        
+        user.user_id = model.user_id
+        
+        return user
+    
+    async def update(
+            self,
+            user: User,
+            )->User:
+        """
+        Update an existing user.
+        Returns the updated user.
+        """
+        model = self._to_model(user)
+
+        updated_model = await self.session.merge(model)
+        await self.session.flush()
+
+        return self._to_entity(updated_model)
+
